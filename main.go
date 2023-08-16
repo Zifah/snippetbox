@@ -26,11 +26,10 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/snippet/view", snippetView)
-	mux.HandleFunc("/snippet/create", snippetCreate)
+	http.HandleFunc("/", home)
+	http.HandleFunc("/snippet/view", snippetView)
+	http.HandleFunc("/snippet/create", snippetCreate)
 
 	log.Print("Starting server on :4000")
-	log.Fatal(http.ListenAndServe(":4000", mux))
+	log.Fatal(http.ListenAndServe(":4000", nil))
 }
