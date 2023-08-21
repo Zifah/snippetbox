@@ -27,10 +27,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
-
-	w.Write([]byte("Hello from Snippetbox."))
-	// TODO Hafiz: Why is this a byte array and not a string?
-	// Because the Write method only accepts a byte array
 }
 
 func snippetCreate(w http.ResponseWriter, r *http.Request) {
