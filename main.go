@@ -11,6 +11,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header()["Date"] = nil
 	w.Write([]byte("Hello from Snippetbox."))
 	// TODO Hafiz: Why is this a byte array and not a string?
 	// Because the Write method only accepts a byte array
