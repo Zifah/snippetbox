@@ -55,3 +55,7 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "View an existing snippet with ID: %d", id)
 }
+
+func downloadHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./ui/static/statics.zip")
+}
