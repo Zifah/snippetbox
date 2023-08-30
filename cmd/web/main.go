@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", home)
+	http.Handle("/", &home{})
 	http.HandleFunc("/snippet/view", snippetView)
 	http.HandleFunc("/snippet/create", snippetCreate)
 

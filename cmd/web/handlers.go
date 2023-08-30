@@ -8,7 +8,9 @@ import (
 	"text/template"
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
+type home struct{}
+
+func (h *home) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
