@@ -1,11 +1,15 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 )
 
 func main() {
+	addr := flag.String("addr", ":4000", "HTTP network addrress")
+	flag.Parse()
+
 	http.Handle("/", &home{})
 	http.HandleFunc("/snippet/view", snippetView)
 	http.HandleFunc("/snippet/create", snippetCreate)
@@ -13,6 +17,6 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fileServer))
 
-	log.Print("Starting server on :4000")
-	log.Fatal(http.ListenAndServe(":4000", nil))
+	log.Print("Starting server on " + *addr)
+	log.Fatal(http.ListenAndServe(*addr, nil))
 }
