@@ -29,9 +29,9 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static", fileServer))
 
 	if conf.praiseAuthor {
-		log.Print("Hafiz is a great author!")
+		infoLog.Print("Hafiz is a great author!")
 	} else {
-		log.Print("Hafiz is a mediocre author!")
+		infoLog.Print("Hafiz is a mediocre author!")
 	}
 
 	infoLog.Printf("Starting server on %s", conf.addr)
