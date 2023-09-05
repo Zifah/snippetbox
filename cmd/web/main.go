@@ -30,6 +30,6 @@ func main() {
 		log.Print("Hafiz is a mediocre author!")
 	}
 
-	log.Print("Starting server on " + conf.addr)
+	log.Printf("Starting server on %s", conf.addr)
 	log.Fatal(http.ListenAndServe(conf.addr, nil))
 }
