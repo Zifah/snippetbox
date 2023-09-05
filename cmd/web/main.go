@@ -34,6 +34,11 @@ func main() {
 		infoLog.Print("Hafiz is a mediocre author!")
 	}
 
+	srv := http.Server{
+		Addr:     conf.addr,
+		ErrorLog: errorLog,
+	}
+
 	infoLog.Printf("Starting server on %s", conf.addr)
-	errorLog.Fatal(http.ListenAndServe(conf.addr, nil))
+	errorLog.Fatal(srv.ListenAndServe())
 }
