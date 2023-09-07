@@ -12,7 +12,7 @@ type config struct {
 	praiseAuthor bool
 }
 
-type app struct {
+type application struct {
 	infoLog  *log.Logger
 	errorLog *log.Logger
 }
@@ -23,7 +23,7 @@ func main() {
 	flag.BoolVar(&conf.praiseAuthor, "praiseAuthor", false, "Praise or demean author")
 	flag.Parse()
 
-	app := app{
+	app := application{
 		infoLog:  log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime),
 		errorLog: log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile),
 	}
