@@ -28,13 +28,6 @@ func main() {
 		errorLog: log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile),
 	}
 
-	http.HandleFunc("/", app.home)
-	http.HandleFunc("/snippet/view", app.snippetView)
-	http.HandleFunc("/snippet/create", app.snippetCreate)
-
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	http.Handle("/static/", http.StripPrefix("/static", fileServer))
-
 	if conf.praiseAuthor {
 		app.infoLog.Print("Hafiz is a great author!")
 	} else {
@@ -44,6 +37,7 @@ func main() {
 	srv := http.Server{
 		Addr:     conf.addr,
 		ErrorLog: app.errorLog,
+		Handler:  app.routes(),
 	}
 
 	app.infoLog.Printf("Starting server on %s", conf.addr)
