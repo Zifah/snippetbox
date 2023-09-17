@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"snippetbox.hafiz.com.ng/internal/models"
 )
 
 type config struct {
@@ -18,6 +20,7 @@ type config struct {
 type application struct {
 	infoLog  *log.Logger
 	errorLog *log.Logger
+	snippets *models.SnippetModel
 }
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -54,6 +57,7 @@ func main() {
 	app := application{
 		infoLog:  infoLog,
 		errorLog: errorLog,
+		snippets: &models.SnippetModel{DB: db},
 	}
 
 	if conf.praiseAuthor {
