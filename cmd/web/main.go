@@ -40,7 +40,7 @@ func openDB(dsn string) (*sql.DB, error) {
 }
 
 func main() {
-	defaultDsn := fmt.Sprintf("web:%s@/snippetbox?parseTime=true", os.Getenv("DB_PASS"))
+	defaultDsn := fmt.Sprintf("web:%s@/snippetbox?parseTime=true", os.Getenv("SNIPPETBOX_DBPASS"))
 
 	conf := config{}
 	flag.StringVar(&conf.addr, "addr", ":4000", "HTTP network addrress")
