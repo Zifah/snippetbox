@@ -3,10 +3,12 @@ package main
 import (
 	"database/sql"
 	"flag"
-	_ "github.com/go-sql-driver/mysql"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 
 	"snippetbox.hafiz.com.ng/internal/models"
 )
@@ -38,10 +40,12 @@ func openDB(dsn string) (*sql.DB, error) {
 }
 
 func main() {
+	defaultDsn := fmt.Sprintf("web:%s@/snippetbox?parseTime=true", os.Getenv("DB_PASS"))
+
 	conf := config{}
 	flag.StringVar(&conf.addr, "addr", ":4000", "HTTP network addrress")
 	flag.BoolVar(&conf.praiseAuthor, "praiseAuthor", false, "Praise or demean author")
-	flag.StringVar(&conf.dsn, "dsn", "web:Password123@/snippetbox?parseTime=true", "MySQL data source name")
+	flag.StringVar(&conf.dsn, "dsn", defaultDsn, "MySQL data source name")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
