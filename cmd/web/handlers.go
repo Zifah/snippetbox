@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"snippetbox.hafiz.com.ng/internal/models"
 )
@@ -16,7 +15,7 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
+	/* files := []string{
 		"./ui/html/base.tmpl",
 		"./ui/html/pages/home.tmpl",
 		"./ui/html/partials/nav.tmpl",
@@ -32,6 +31,16 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		a.serverError(w, err)
 		return
+	} */
+
+	latest, err := a.snippets.Latest()
+	if err != nil {
+		a.serverError(w, err)
+		return
+	}
+
+	for _, snippet := range latest {
+		fmt.Fprintf(w, "%+v\n", snippet)
 	}
 }
 
