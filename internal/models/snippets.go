@@ -15,14 +15,23 @@ type Snippet struct {
 }
 
 type SnippetModel struct {
-	DB *sql.DB
+	DB         *sql.DB
+	insertStmt *sql.Stmt
+}
+
+func NewSnippetModel(db *sql.DB) (*SnippetModel, error) {
+	st, err := db.Prepare(`INSERT INTO snippets (title, content, created, expires)
+	VALUES (?, ?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &SnippetModel{db, st}, nil
 }
 
 func (m *SnippetModel) Insert(title string, content string, expires int) (int, error) {
-	stmt := `INSERT INTO snippets (title, content, created, expires)
-	VALUES (?, ?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`
-
-	result, err := m.DB.Exec(stmt, title, content, expires)
+	result, err := m.insertStmt.Exec(title, content, expires)
 	if err != nil {
 		return 0, err
 	}

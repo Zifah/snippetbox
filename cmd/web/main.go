@@ -58,11 +58,12 @@ func main() {
 
 	defer db.Close()
 
-	app := application{
-		infoLog:  infoLog,
-		errorLog: errorLog,
-		snippets: &models.SnippetModel{DB: db},
+	snippets, err := models.NewSnippetModel(db)
+	if err != nil {
+		errorLog.Fatal(err)
 	}
+
+	app := application{infoLog, errorLog, snippets}
 
 	if conf.praiseAuthor {
 		infoLog.Print("Hafiz is a great author!")
