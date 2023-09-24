@@ -16,7 +16,7 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/* files := []string{
+	files := []string{
 		"./ui/html/base.tmpl",
 		"./ui/html/pages/home.tmpl",
 		"./ui/html/partials/nav.tmpl",
@@ -28,20 +28,18 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ts.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		a.serverError(w, err)
-		return
-	} */
-
 	latest, err := a.snippets.Latest()
 	if err != nil {
 		a.serverError(w, err)
 		return
 	}
 
-	for _, snippet := range latest {
-		fmt.Fprintf(w, "%+v\n", snippet)
+	err = ts.ExecuteTemplate(w, "base", templateData{
+		LatestSnippets: latest,
+	})
+	if err != nil {
+		a.serverError(w, err)
+		return
 	}
 }
 
@@ -96,7 +94,7 @@ func (a *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := templateData{s}
+	data := templateData{Snippet: s}
 	if err = ts.ExecuteTemplate(w, "base", data); err != nil {
 		a.serverError(w, err)
 		return
