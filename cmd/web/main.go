@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -20,9 +21,10 @@ type config struct {
 }
 
 type application struct {
-	infoLog  *log.Logger
-	errorLog *log.Logger
-	snippets *models.SnippetModel
+	infoLog       *log.Logger
+	errorLog      *log.Logger
+	snippets      *models.SnippetModel
+	templateCache map[string]*template.Template
 }
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -63,7 +65,12 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
-	app := application{infoLog, errorLog, snippets}
+	tc, err := newTemplateCache()
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
+	app := application{infoLog, errorLog, snippets, tc}
 
 	if conf.praiseAuthor {
 		infoLog.Print("Hafiz is a great author!")
