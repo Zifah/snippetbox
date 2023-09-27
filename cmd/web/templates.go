@@ -8,6 +8,7 @@ import (
 )
 
 type templateData struct {
+	CurrentYear    int
 	Snippet        *models.Snippet
 	LatestSnippets []*models.Snippet
 }
