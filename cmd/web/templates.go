@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+	"time"
 
 	"snippetbox.hafiz.com.ng/internal/models"
 )
@@ -11,6 +12,14 @@ type templateData struct {
 	CurrentYear    int
 	Snippet        *models.Snippet
 	LatestSnippets []*models.Snippet
+}
+
+func humanDate(t time.Time) string {
+	return t.Format("02 Jan 2006 at 15:04")
+}
+
+var functions = template.FuncMap{
+	"humanDate": humanDate,
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -22,12 +31,14 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	}
 
 	for _, p := range pages {
+		name := filepath.Base(p)
+
 		files := []string{
 			"./ui/html/base.tmpl",
 			p,
 		}
 
-		templateSet, err := template.ParseFiles(files...)
+		templateSet, err := template.New(name).Funcs(functions).ParseFiles(files...)
 		if err != nil {
 			return nil, err
 		}
@@ -37,7 +48,6 @@ func newTemplateCache() (map[string]*template.Template, error) {
 			return nil, err
 		}
 
-		name := filepath.Base(p)
 		cache[name] = templateSet
 	}
 
