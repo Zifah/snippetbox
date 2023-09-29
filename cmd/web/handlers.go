@@ -15,8 +15,6 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	panic("Oops! Something really bad has occurred!")
-
 	latest, err := a.snippets.Latest()
 	if err != nil {
 		a.serverError(w, err)
