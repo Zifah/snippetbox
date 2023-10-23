@@ -45,7 +45,7 @@ func main() {
 	defaultDsn := fmt.Sprintf("web:%s@/snippetbox?parseTime=true", os.Getenv("SNIPPETBOX_DBPASS"))
 
 	conf := config{}
-	flag.StringVar(&conf.addr, "addr", ":4000", "HTTP network addrress")
+	flag.StringVar(&conf.addr, "addr", "127.0.0.1:4000", "HTTP network addrress")
 	flag.BoolVar(&conf.praiseAuthor, "praiseAuthor", false, "Praise or demean author")
 	flag.StringVar(&conf.dsn, "dsn", defaultDsn, "MySQL data source name")
 	flag.Parse()
