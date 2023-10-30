@@ -58,10 +58,10 @@ func (a *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 type snippetCreateForm struct {
-	Title   string
-	Content string
-	Expires int
-	validator.Validator
+	Title               string `form:"title"`
+	Content             string `form:"content"`
+	Expires             int    `form:"expires"`
+	validator.Validator `form:"-"`
 }
 
 func (a *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
@@ -71,15 +71,12 @@ func (a *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	expires, err := strconv.Atoi(r.PostForm.Get("expires"))
+	var form snippetCreateForm
+
+	err = a.formDecoder.Decode(&form, r.PostForm)
 	if err != nil {
 		a.clientError(w, http.StatusBadRequest)
 		return
-	}
-	form := snippetCreateForm{
-		Title:   r.PostForm.Get("title"),
-		Content: r.PostForm.Get("content"),
-		Expires: expires,
 	}
 
 	validateFormFields(&form)
@@ -91,7 +88,7 @@ func (a *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	id, err := a.snippets.Insert(form.Title, form.Content, expires)
+	id, err := a.snippets.Insert(form.Title, form.Content, form.Expires)
 	if err != nil {
 		a.serverError(w, err)
 		return
