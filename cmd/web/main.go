@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-playground/form/v4"
 	_ "github.com/go-sql-driver/mysql"
 
 	"snippetbox.hafiz.com.ng/internal/models"
@@ -25,6 +26,7 @@ type application struct {
 	errorLog      *log.Logger
 	snippets      *models.SnippetModel
 	templateCache map[string]*template.Template
+	formDecoder   *form.Decoder
 }
 
 func openDB(dsn string) (*sql.DB, error) {
@@ -70,7 +72,9 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
-	app := application{infoLog, errorLog, snippets, tc}
+	dec := form.NewDecoder()
+
+	app := application{infoLog, errorLog, snippets, tc, dec}
 
 	if conf.praiseAuthor {
 		infoLog.Print("Hafiz is a great author!")
