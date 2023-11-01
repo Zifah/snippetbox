@@ -100,8 +100,17 @@ func validateFormFields(form *snippetCreateForm) {
 	form.CheckField(validator.PermittedInt(form.Expires, 1, 7, 365), "expires", "This field must equal 1, 7, 365")
 }
 
+type userSignupForm struct {
+	Name                string `form:"name"`
+	Email               string `form:"email"`
+	Password            string `form:"password"`
+	validator.Validator `form:"-"`
+}
+
 func (a *application) userSignup(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Display a HTML form for signing up a user")
+	data := a.newTemplateData(r)
+	data.Form = userSignupForm{}
+	a.render(w, http.StatusOK, "signup.tmpl", &data)
 }
 
 func (a *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
