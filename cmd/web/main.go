@@ -29,6 +29,7 @@ type application struct {
 	infoLog        *log.Logger
 	errorLog       *log.Logger
 	snippets       *models.SnippetModel
+	users          *models.UserModel
 	templateCache  map[string]*template.Template
 	formDecoder    *form.Decoder
 	sessionManager *scs.SessionManager
@@ -72,6 +73,8 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	users := models.UserModel{DB: db}
+
 	tc, err := newTemplateCache()
 	if err != nil {
 		errorLog.Fatal(err)
@@ -84,7 +87,7 @@ func main() {
 	sessionMgr.Lifetime = 12 * time.Hour
 	sessionMgr.Cookie.Secure = true
 
-	app := application{infoLog, errorLog, snippets, tc, dec, sessionMgr}
+	app := application{infoLog, errorLog, snippets, &users, tc, dec, sessionMgr}
 
 	if conf.praiseAuthor {
 		infoLog.Print("Hafiz is a great author!")
