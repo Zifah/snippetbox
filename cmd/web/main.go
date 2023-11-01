@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"flag"
 	"fmt"
@@ -91,10 +92,15 @@ func main() {
 		infoLog.Print("Hafiz is a mediocre author!")
 	}
 
+	tlsConfig := tls.Config{
+		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+	}
+
 	srv := http.Server{
-		Addr:     conf.addr,
-		ErrorLog: errorLog,
-		Handler:  app.routes(),
+		Addr:      conf.addr,
+		ErrorLog:  errorLog,
+		Handler:   app.routes(),
+		TLSConfig: &tlsConfig,
 	}
 
 	infoLog.Printf("Starting server on %s", conf.addr)
