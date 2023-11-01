@@ -99,3 +99,23 @@ func validateFormFields(form *snippetCreateForm) {
 	form.CheckField(validator.NotBlank(form.Content), "content", "This field cannot be blank")
 	form.CheckField(validator.PermittedInt(form.Expires, 1, 7, 365), "expires", "This field must equal 1, 7, 365")
 }
+
+func (a *application) userSignup(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Display a HTML form for signing up a user")
+}
+
+func (a *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Sign up the user with the details provided")
+}
+
+func (a *application) userLogin(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Display a HTML form for logging a user in")
+}
+
+func (a *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Authenticate the user")
+}
+
+func (a *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Logout a user")
+}
