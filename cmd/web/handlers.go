@@ -73,7 +73,7 @@ func (a *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	validateFormFields(&form)
+	validateNewSnippet(&form)
 
 	if !form.Valid() {
 		data := a.newTemplateData(r)
@@ -93,10 +93,10 @@ func (a *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) 
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 }
 
-func validateFormFields(form *snippetCreateForm) {
-	form.CheckField(validator.NotBlank(form.Title), "title", "This field cannot be blank")
+func validateNewSnippet(form *snippetCreateForm) {
+	form.CheckField(validator.NotBlank(form.Title), "title", models.ValidationMessageNotBlank)
 	form.CheckField(validator.MaxChars(form.Title, 100), "title", "This field cannot be more than 100 characters long")
-	form.CheckField(validator.NotBlank(form.Content), "content", "This field cannot be blank")
+	form.CheckField(validator.NotBlank(form.Content), "content", models.ValidationMessageNotBlank)
 	form.CheckField(validator.PermittedInt(form.Expires, 1, 7, 365), "expires", "This field must equal 1, 7, 365")
 }
 
@@ -114,7 +114,31 @@ func (a *application) userSignup(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
+	userForm := userSignupForm{}
+	err := a.decodePostForm(r, &userForm)
+	if err != nil {
+		a.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	validateNewUser(&userForm)
+	if !userForm.Valid() {
+		data := a.newTemplateData(r)
+		data.Form = userForm
+		a.render(w, http.StatusUnprocessableEntity, "signup.tmpl", &data)
+		return
+	}
+
 	fmt.Fprint(w, "Sign up the user with the details provided")
+}
+
+func validateNewUser(userForm *userSignupForm) {
+	userForm.CheckField(validator.NotBlank(userForm.Name), "name", models.ValidationMessageNotBlank)
+	userForm.CheckField(validator.MaxChars(userForm.Name, 100), "name", "This field cannot be more than 100 characters long")
+	userForm.CheckField(validator.NotBlank(userForm.Email), "email", models.ValidationMessageNotBlank)
+	userForm.CheckField(validator.MatchesRegex(userForm.Email, validator.EmailRX), "email", "This field must contain a valid email address")
+	userForm.CheckField(validator.NotBlank(userForm.Password), "password", models.ValidationMessageNotBlank)
+	userForm.CheckField(validator.MinChars(userForm.Password, 8), "password", "This field must be at least 8 characters long")
 }
 
 func (a *application) userLogin(w http.ResponseWriter, r *http.Request) {
