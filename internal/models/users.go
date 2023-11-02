@@ -79,8 +79,8 @@ func (m *UserModel) Authenticate(email string, password string) (int, error) {
 	}
 
 	err = bcrypt.CompareHashAndPassword(user.password, []byte(password))
-	if err != nil {
-		return 0, ErrInvalidCredentials
+	if err != nil && errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+		err = ErrInvalidCredentials
 	}
 
 	return user.ID, err
