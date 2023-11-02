@@ -207,6 +207,7 @@ func (a *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// After successful authentication, the session should be renewed
 	err = a.sessionManager.RenewToken(r.Context())
 	if err != nil {
 		a.serverError(w, err)
