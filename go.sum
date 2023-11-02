@@ -21,5 +21,9 @@ github.com/pilu/config v0.0.0-20131214182432-3eb99e6c0b9a h1:Tg4E4cXPZSZyd3H1tJl
 github.com/pilu/config v0.0.0-20131214182432-3eb99e6c0b9a/go.mod h1:9Or9aIl95Kp43zONcHd5tLZGKXb9iLx0pZjau0uJ5zg=
 github.com/pilu/fresh v0.0.0-20190826141211-0fa698148017 h1:XXDLZIIt9NqdeIEva0DM+z1npM0Tsx6h5TYqwNvXfP0=
 github.com/pilu/fresh v0.0.0-20190826141211-0fa698148017/go.mod h1:2LLTtftTZSdAPR/iVyennXZDLZOYzyDn+T0qEKJ8eSw=
+golang.org/x/crypto v0.14.0 h1:wBqGXzWJW6m1XrIKlAH0Hs1JJ7+9KBwnIO8v66Q9cHc=
+golang.org/x/crypto v0.14.0/go.mod h1:MVFd36DqK4CsrnJYDkBA3VC4m2GkXAM0PvzMCn4JQf4=
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab h1:2QkjZIsXupsJbJIdSjjUOgWK3aEtzyuh2mPt3l/CkeU=
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.13.0 h1:Af8nKPmuFypiUBjVoU9V20FiaFXOcuZI21p0ycVYYGE=
+golang.org/x/sys v0.13.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

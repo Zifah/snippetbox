@@ -122,6 +122,7 @@ func (a *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	validateNewUser(&userForm)
+
 	if !userForm.Valid() {
 		data := a.newTemplateData(r)
 		data.Form = userForm
@@ -129,7 +130,22 @@ func (a *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprint(w, "Sign up the user with the details provided")
+	_, err = a.users.Insert(userForm.Name, userForm.Email, userForm.Password)
+
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			userForm.CheckField(false, "email", "Email is already in use. Please log-in.")
+			data := a.newTemplateData(r)
+			data.Form = userForm
+			a.render(w, http.StatusUnprocessableEntity, "signup.tmpl", &data)
+		} else {
+			a.serverError(w, err)
+		}
+		return
+	}
+
+	a.sessionManager.Put(r.Context(), "flash", "Your signup was successful! Please log in.")
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
 
 func validateNewUser(userForm *userSignupForm) {

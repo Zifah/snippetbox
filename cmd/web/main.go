@@ -73,7 +73,10 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
-	users := models.UserModel{DB: db}
+	users, err := models.NewUserModel(db)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
 
 	tc, err := newTemplateCache()
 	if err != nil {
@@ -87,7 +90,7 @@ func main() {
 	sessionMgr.Lifetime = 12 * time.Hour
 	sessionMgr.Cookie.Secure = true
 
-	app := application{infoLog, errorLog, snippets, &users, tc, dec, sessionMgr}
+	app := application{infoLog, errorLog, snippets, users, tc, dec, sessionMgr}
 
 	if conf.praiseAuthor {
 		infoLog.Print("Hafiz is a great author!")
