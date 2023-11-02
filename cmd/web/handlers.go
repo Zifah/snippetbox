@@ -107,6 +107,12 @@ type userSignupForm struct {
 	validator.Validator `form:"-"`
 }
 
+type userLoginForm struct {
+	Email               string `form:"email"`
+	Password            string `form:"password"`
+	validator.Validator `form:"-"`
+}
+
 func (a *application) userSignup(w http.ResponseWriter, r *http.Request) {
 	data := a.newTemplateData(r)
 	data.Form = userSignupForm{}
@@ -158,11 +164,57 @@ func validateNewUser(userForm *userSignupForm) {
 }
 
 func (a *application) userLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Display a HTML form for logging a user in")
+	data := a.newTemplateData(r)
+	data.Form = userLoginForm{}
+
+	if data.UserID > 0 {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	a.render(w, http.StatusOK, "login.tmpl", &data)
 }
 
 func (a *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Authenticate the user")
+	loginForm := userLoginForm{}
+	err := a.decodePostForm(r, &loginForm)
+
+	if err != nil {
+		a.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	validateUserLogin(loginForm)
+
+	if !loginForm.Valid() {
+		data := a.newTemplateData(r)
+		data.Form = loginForm
+		a.render(w, http.StatusUnprocessableEntity, "login.tmpl", &data)
+		return
+	}
+
+	userId, err := a.users.Authenticate(loginForm.Email, loginForm.Password)
+
+	if err != nil {
+		if errors.Is(err, models.ErrInvalidCredentials) {
+			loginForm.AddNonFieldError("Email or Password is not correct.")
+			data := a.newTemplateData(r)
+			data.Form = loginForm
+			a.render(w, http.StatusUnprocessableEntity, "login.tmpl", &data)
+		} else {
+			a.serverError(w, err)
+		}
+		return
+	}
+
+	a.sessionManager.Put(r.Context(), "userID", userId)
+	a.sessionManager.Put(r.Context(), "flash", "Welcome back to SnippetBox!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func validateUserLogin(loginForm userLoginForm) {
+	loginForm.CheckField(validator.NotBlank(loginForm.Email), "email", models.ValidationMessageNotBlank)
+	loginForm.CheckField(validator.NotBlank(loginForm.Password), "password", models.ValidationMessageNotBlank)
 }
 
 func (a *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {

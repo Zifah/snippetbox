@@ -65,8 +65,25 @@ func (m *UserModel) Get(id int) (*User, error) {
 	return nil, nil
 }
 
-func (m *UserModel) Authenticate(email string) (int, error) {
-	return 0, nil
+func (m *UserModel) Authenticate(email string, password string) (int, error) {
+	user := User{}
+	qry := `SELECT id, hashed_password from users where email = ?`
+	err := m.DB.QueryRow(qry, email).Scan(&user.ID, &user.password)
+
+	if err != nil && errors.Is(err, sql.ErrNoRows) {
+		return 0, ErrInvalidCredentials
+	}
+
+	if err != nil {
+		return 0, err
+	}
+
+	err = bcrypt.CompareHashAndPassword(user.password, []byte(password))
+	if err != nil {
+		return 0, ErrInvalidCredentials
+	}
+
+	return user.ID, err
 }
 
 func (m *UserModel) Exists(id int) (bool, error) {

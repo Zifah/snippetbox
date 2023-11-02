@@ -14,6 +14,7 @@ type templateData struct {
 	LatestSnippets []*models.Snippet
 	Form           any
 	Flash          string
+	UserID         int
 }
 
 func humanDate(t time.Time) string {
