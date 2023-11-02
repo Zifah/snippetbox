@@ -220,7 +220,7 @@ func (a *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 
 func validateUserLogin(loginForm *userLoginForm) {
 	loginForm.CheckField(validator.NotBlank(loginForm.Email), "email", models.ValidationMessageNotBlank)
-	loginForm.CheckField(validator.NotBlank(loginForm.Email), "email", "This field must contain a valid email address")
+	loginForm.CheckField(validator.MatchesRegex(loginForm.Email, validator.EmailRX), "email", "This field must contain a valid email address")
 	loginForm.CheckField(validator.NotBlank(loginForm.Password), "password", models.ValidationMessageNotBlank)
 }
 
