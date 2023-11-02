@@ -184,7 +184,7 @@ func (a *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	validateUserLogin(loginForm)
+	validateUserLogin(&loginForm)
 
 	if !loginForm.Valid() {
 		data := a.newTemplateData(r)
@@ -212,7 +212,7 @@ func (a *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func validateUserLogin(loginForm userLoginForm) {
+func validateUserLogin(loginForm *userLoginForm) {
 	loginForm.CheckField(validator.NotBlank(loginForm.Email), "email", models.ValidationMessageNotBlank)
 	loginForm.CheckField(validator.NotBlank(loginForm.Password), "password", models.ValidationMessageNotBlank)
 }
