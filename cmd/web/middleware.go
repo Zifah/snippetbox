@@ -46,6 +46,8 @@ func (app *application) requireAuthentication(next http.Handler) http.Handler {
 				http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 				return
 			}
+
+			w.Header().Add("Cache-Control", "no-store")
 			next.ServeHTTP(w, r)
 		}()
 	})
