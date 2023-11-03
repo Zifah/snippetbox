@@ -165,13 +165,13 @@ func validateNewUser(userForm *userSignupForm) {
 
 func (a *application) userLogin(w http.ResponseWriter, r *http.Request) {
 	data := a.newTemplateData(r)
-	data.Form = userLoginForm{}
 
-	if data.UserID > 0 {
+	if data.IsAuthenticated {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
+	data.Form = userLoginForm{}
 	a.render(w, http.StatusOK, "login.tmpl", &data)
 }
 

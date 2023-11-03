@@ -2,14 +2,15 @@
 <nav>
     <div>
         <a href='/'>Home</a>
+        {{if .IsAuthenticated}}
         <a href='/snippet/create'>Create snippet</a>
+        {{end}}
     </div>
     <div>
+        {{if not .IsAuthenticated}}
         <a href="/user/signup">Signup</a>
-        {{if not .UserID}}
         <a href="/user/login">Login</a>
-        {{end}}
-        {{with .UserID}}
+        {{else}}
         <form action="/user/logout" method="POST">
             <button>Logout</button>
         </form>
