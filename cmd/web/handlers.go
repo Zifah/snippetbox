@@ -226,5 +226,11 @@ func validateUserLogin(loginForm *userLoginForm) {
 }
 
 func (a *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Logout a user")
+	err := a.sessionManager.Destroy(r.Context())
+	if err != nil {
+		a.serverError(w, err)
+		return
+	}
+	a.sessionManager.Put(r.Context(), "flash", "Logout successful!")
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
