@@ -97,7 +97,7 @@ func validateNewSnippet(form *snippetCreateForm) {
 	form.CheckField(validator.NotBlank(form.Title), "title", models.ValidationMessageNotBlank)
 	form.CheckField(validator.MaxChars(form.Title, 100), "title", "This field cannot be more than 100 characters long")
 	form.CheckField(validator.NotBlank(form.Content), "content", models.ValidationMessageNotBlank)
-	form.CheckField(validator.PermittedInt(form.Expires, 1, 7, 365), "expires", "This field must equal 1, 7, 365")
+	form.CheckField(validator.PermittedValue(form.Expires, 1, 7, 365), "expires", "This field must equal 1, 7, 365")
 }
 
 type userSignupForm struct {
