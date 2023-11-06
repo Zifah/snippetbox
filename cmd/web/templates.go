@@ -2,10 +2,12 @@ package main
 
 import (
 	"html/template"
+	"io/fs"
 	"path/filepath"
 	"time"
 
 	"snippetbox.hafiz.com.ng/internal/models"
+	"snippetbox.hafiz.com.ng/ui"
 )
 
 type templateData struct {
@@ -29,7 +31,7 @@ var functions = template.FuncMap{
 func newTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
-	pages, err := filepath.Glob("./ui/html/pages/*.tmpl")
+	pages, err := fs.Glob(ui.Files, "html/pages/*.tmpl")
 	if err != nil {
 		return nil, err
 	}
@@ -37,17 +39,13 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	for _, p := range pages {
 		name := filepath.Base(p)
 
-		files := []string{
-			"./ui/html/base.tmpl",
+		patterns := []string{
+			"html/base.tmpl",
+			"html/partials/*.tmpl",
 			p,
 		}
 
-		templateSet, err := template.New(name).Funcs(functions).ParseFiles(files...)
-		if err != nil {
-			return nil, err
-		}
-
-		templateSet, err = templateSet.ParseGlob("./ui/html/partials/*.tmpl")
+		templateSet, err := template.New(name).Funcs(functions).ParseFS(ui.Files, patterns...)
 		if err != nil {
 			return nil, err
 		}
