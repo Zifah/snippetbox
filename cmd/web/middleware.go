@@ -69,7 +69,7 @@ func noSurf(next http.Handler) http.Handler {
 func (app *application) authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		isAuthenticated := false
-		userId := app.sessionManager.GetInt(r.Context(), "userID")
+		userId := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
 		if userId > 0 {
 			var err error
 			isAuthenticated, err = app.users.Exists(userId)

@@ -214,7 +214,7 @@ func (a *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.sessionManager.Put(r.Context(), "userID", userId)
+	a.sessionManager.Put(r.Context(), "authenticatedUserID", userId)
 	a.sessionManager.Put(r.Context(), "flash", "Welcome back to SnippetBox!")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
